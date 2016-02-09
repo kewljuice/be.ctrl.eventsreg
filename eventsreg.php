@@ -110,7 +110,7 @@ function eventsreg_civicrm_caseTypes(&$caseTypes) {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_caseTypes
  */
 function eventsreg_civicrm_angularModules(&$angularModules) {
-_eventsreg_civix_civicrm_angularModules($angularModules);
+  _eventsreg_civix_civicrm_angularModules($angularModules);
 }
 
 /**
@@ -123,16 +123,35 @@ function eventsreg_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
 }
 
 /**
- * Functions below this ship commented out. Uncomment as required.
+ * CiviCRM hook buildForm
  *
+ * http://wiki.civicrm.org/confluence/display/CRMDOC/Hook+Reference
+ * http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
+ * http://wiki.civicrm.org/confluence/display/CRMDOC/Form+hooks
+ * http://civicrm.stackexchange.com/questions/213/can-i-find-the-target-contact-id-in-hook-civicrm-buildform
+ * http://www.smarty.net/forums/viewtopic.php?t=11435
+ * http://www.jackrabbithanna.com/articles/easy-jquery-modificaiton-civicrm-forms
+ * https://www.prestashop.com/forums/topic/218203-solved-how-to-view-module-smarty-variables
+ * https://forum.civicrm.org/index.php?topic=31686.0
+ *
+ */
+function eventsreg_civicrm_buildForm($formName, &$form) {
+  /*
+   * Include JS & CSS
+   * https://forum.civicrm.org/index.php?topic=27216.0
+   */
+  if (strpos($formName, 'CRM_Event_Form_Registration_') !== FALSE) {
+    CRM_Core_Resources::singleton()
+      // include JS file
+      ->addScriptFile('be.ctrl.eventsreg', 'js/ctrl-multistep.js')
+      // include CSS file
+      ->addStyleFile('be.ctrl.eventsreg', 'css/ctrl-eventsreg.css')
+      ->addStyleFile('be.ctrl.eventsreg', 'css/font-awesome.min.css');
+  }
+  /*
+   * Define Drupal node linked to event-id
+   */
 
-/**
- * Implements hook_civicrm_preProcess().
- *
- * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_preProcess
- *
-function eventsreg_civicrm_preProcess($formName, &$form) {
+  // TODO
 
 }
-
-*/
