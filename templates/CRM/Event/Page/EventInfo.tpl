@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.5                                                |
+ | CiviCRM version 4.6                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2014                                |
+ | Copyright CiviCRM LLC (c) 2004-2015                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -39,14 +39,19 @@
   <li>
     <div id="crm-event-links-wrapper">
       <span id="crm-event-configure-link" class="crm-hover-button">
-        <span title="{ts}Configure this event.{/ts}" class="icon settings-icon"></span>
+        <span title="{ts}Configure this event.{/ts}" class="icon ui-icon-wrench"></span>
       </span>
       <div class="ac_results" id="crm-event-links-list" style="margin-left: -25px;">
         <div class="crm-event-links-list-inner">
           <ul>
             {foreach from=$manageEventLinks item='link'}
               <li>
-                <a href="{crmURL p=$link.url q="reset=1&action=update&id=`$event.id`" fb=1}">{$link.title}</a>
+                {* Schedule Reminders requires a different query string. *}
+                {if $link.url EQ 'civicrm/event/manage/reminder'}
+                  <a href="{crmURL p=$link.url q="reset=1&action=browse&setTab=1&id=`$event.id`" fb=1}">{$link.title}</a>
+                {else}
+                  <a href="{crmURL p=$link.url q="reset=1&action=update&id=`$event.id`" fb=1}">{$link.title}</a>
+                {/if}
               </li>
             {/foreach}
           </ul>
@@ -58,7 +63,7 @@
   <li>
     <div id="crm-participant-wrapper">
       <span id="crm-participant-links" class="crm-hover-button">
-        <span title="{ts}Participant listing links.{/ts}" class="icon search-icon"></span>
+        <span title="{ts}Participant listing links.{/ts}" class="icon ui-icon-search"></span>
       </span>
       <div class="ac_results" id="crm-participant-list" style="margin-left: -25px;">
         <div class="crm-participant-list-inner">
@@ -83,17 +88,6 @@
   <div class="clear"></div>
 </div>
 {/if}
-
-<!-- CUSTOM: if Drupal Synch is active -->
-
-    <!-- CUSTOM: back to Drupal link -->
-    TODO: back to Drupal link!
-    {crmURL p='node/' q='reset=1' h=0}
-    <div class="action-link section event_info_link-section">
-        <a href="/node/{$CTRL.nid}">&raquo; {ts 1=$event.event_title domain='be.ctrl.eventsreg'}Back to "%1" event information{/ts}</a>
-    </div>
-
-<!--
 <div class="vevent crm-event-id-{$event.id} crm-block crm-event-info-form-block">
   <div class="event-info">
   {* Display top buttons only if the page is long enough to merit duplicate buttons *}
@@ -141,9 +135,7 @@
         </div>
     <div class="clear"></div>
   </div>
--->
 
-<!--
   {if $isShowLocation}
 
         {if $location.address.1}
@@ -168,9 +160,8 @@
       {/if}
 
   {/if}{*End of isShowLocation condition*}
--->
 
-<!--
+
   {if $location.phone.1.phone || $location.email.1.email}
       <div class="crm-section event_contact-section">
           <div class="label"><label>{ts}Contact{/ts}</label></div>
@@ -192,9 +183,7 @@
           <div class="clear"></div>
       </div>
   {/if}
--->
 
-<!--
   {if $event.is_monetary eq 1 && $feeBlock.value}
       <div class="crm-section event_fees-section">
           <div class="label"><label>{$event.fee_label}</label></div>
@@ -214,7 +203,13 @@
                       <tr>
                           <td class="{$lClass} crm-event-label">{$feeBlock.label.$idx}</td>
                           {if $isPriceSet & $feeBlock.isDisplayAmount.$idx}
-                          <td class="fee_amount-value right">{$feeBlock.value.$idx|crmMoney}</td>
+            <td class="fee_amount-value right">
+                              {if isset($feeBlock.tax_amount.$idx)}
+          {$feeBlock.value.$idx}
+                              {else}
+                {$feeBlock.value.$idx|crmMoney}
+                              {/if}
+            </td>
                           {/if}
                       </tr>
                       {/if}
@@ -224,10 +219,9 @@
           <div class="clear"></div>
       </div>
   {/if}
--->
 
 
-    {* include file="CRM/Custom/Page/CustomDataView.tpl" *} 
+    {include file="CRM/Custom/Page/CustomDataView.tpl"}
 
     <div class="crm-actionlinks-bottom">
       {crmRegion name="event-page-eventinfo-actionlinks-bottom"}
