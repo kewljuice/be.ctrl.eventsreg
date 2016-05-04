@@ -202,33 +202,36 @@
                 </fieldset>
             {/if}
 
-            {* open div class .eventsreg-block *}
-            <div class="eventsreg-block" id="eventsreg-payment">
-                {* open div class .eventsreg-title *}
-                <div class="eventsreg-title"><h2>{ts domain='be.ctrl.eventsreg'}Payment method{/ts}</h2></div>
-                {* open div class .eventsreg-content *}
-                <div class="eventsreg-content">
-                    {if $form.payment_processor.label}
-                        <fieldset class="crm-public-form-item crm-group payment_options-group" style="display:none;">
-                            <legend>{ts}Payment Options{/ts}</legend>
-                            <div class="crm-public-form-item crm-section payment_processor-section">
-                                <div class="label">{$form.payment_processor.label}</div>
-                                <div class="content">{$form.payment_processor.html}</div>
-                                <div class="clear"></div>
-                            </div>
-                        </fieldset>
-                    {/if}
-                    <div id="billing-payment-block">
-                        {* If we have a payment processor, load it - otherwise it happens via ajax *}
-                        {if $paymentProcessorID or $isBillingAddressRequiredForPayLater}
-                            {include file="CRM/Event/Form/Registration/Register.tpl" snippet=4}
+            {if $form.payment_processor.label or $paymentProcessorID or $isBillingAddressRequiredForPayLater}
+                {* open div class .eventsreg-block *}
+                <div class="eventsreg-block" id="eventsreg-payment">
+                    {* open div class .eventsreg-title *}
+                    <div class="eventsreg-title"><h2>{ts domain='be.ctrl.eventsreg'}Payment method{/ts}</h2></div>
+                    {* open div class .eventsreg-content *}
+                    <div class="eventsreg-content">
+                        {if $form.payment_processor.label}
+                            <fieldset class="crm-public-form-item crm-group payment_options-group"
+                                      style="display:none;">
+                                <legend>{ts}Payment Options{/ts}</legend>
+                                <div class="crm-public-form-item crm-section payment_processor-section">
+                                    <div class="label">{$form.payment_processor.label}</div>
+                                    <div class="content">{$form.payment_processor.html}</div>
+                                    <div class="clear"></div>
+                                </div>
+                            </fieldset>
                         {/if}
+                        <div id="billing-payment-block">
+                            {* If we have a payment processor, load it - otherwise it happens via ajax *}
+                            {if $paymentProcessorID or $isBillingAddressRequiredForPayLater}
+                                {include file="CRM/Event/Form/Registration/Register.tpl" snippet=4}
+                            {/if}
+                        </div>
+                        {include file="CRM/common/paymentBlock.tpl"}
                     </div>
-                    {include file="CRM/common/paymentBlock.tpl"}
+                    {* close div class .eventsreg-content *}
                 </div>
-                {* close div class .eventsreg-content *}
-            </div>
-            {* close div class .eventsreg-block *}
+                {* close div class .eventsreg-block *}
+            {/if}
 
             {if $isCaptcha}
                 {include file='CRM/common/ReCAPTCHA.tpl'}

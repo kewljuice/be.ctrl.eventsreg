@@ -36,7 +36,8 @@
     <div class="crm-event-id-{$event.id} crm-block crm-event-thankyou-form-block">
 
         {* Don't use "normal" thank-you message for Waitlist and Approval Required registrations - since it will probably not make sense for those situations. dgg *}
-        {if $event.thankyou_text AND (not $isOnWaitlist AND not $isRequireApproval)}
+        {* {if $event.thankyou_text AND (not $isOnWaitlist AND not $isRequireApproval)} *}
+        {if $event.thankyou_text}
             {* open div class .eventsreg-intro *}
             <div class="eventsreg-intro">
                 {if $event.confirm_text}
@@ -86,11 +87,13 @@
             {* open div class .eventsreg-preview *}
             <div class="eventsreg-preview">
                 {$pay_later_receipt}
+
+                {if $is_email_confirm}
+                    <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
+                {/if}
             </div>
             {* close div class .eventsreg-preview *}
-            {if $is_email_confirm}
-                <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
-            {/if}
+
             {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
         {elseif $contributeMode EQ 'notify' and $paidEvent}
             {*
