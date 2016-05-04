@@ -1,0 +1,15 @@
+#
+msgid ""
+msgstr ""
+
+msgid "Your personal information"
+msgstr ""
+
+msgid "Your additional data"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
+msgid "Payment method"
+msgstr ""
