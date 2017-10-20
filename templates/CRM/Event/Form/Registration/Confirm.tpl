@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.6                                                |
+ | CiviCRM version 4.7                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2015                                |
+ | Copyright CiviCRM LLC (c) 2004-2017                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -24,6 +24,7 @@
  +--------------------------------------------------------------------+
 *}
 
+
 {* open div class .eventsreg-container *}
 <div class="eventsreg-container" id="eventsreg-confirm">
 
@@ -34,6 +35,39 @@
     {include file="CRM/common/TrackingFields.tpl"}
 
     <div class="crm-event-id-{$event.id} crm-block crm-event-confirm-form-block">
+        {if $isOnWaitlist}
+            <div class="help">
+                {ts}Please verify the information below.<span class="bold">Then click 'Continue' to be added to the WAIT LIST for this event</span>. If space becomes available you will receive an email with a link to a web page where you can complete your registration.{/ts}
+            </div>
+        {elseif $isRequireApproval}
+            <div class="help">
+                {ts}Please verify the information below. Then click 'Continue' to submit your registration.
+                    <span class="bold">Once approved, you will receive an email with a link to a web page where you can complete the registration process.</span>
+                {/ts}
+            </div>
+        {else}
+            <div class="help">
+                {ts}Please verify the information below. Click the
+                    <strong>Go Back</strong>
+                    button below if you need to make changes.{/ts}
+                {if $contributeMode EQ 'notify' and !$is_pay_later and ! $isAmountzero }
+                    {if $paymentProcessor.payment_processor_type EQ 'Google_Checkout'}
+                        {ts 1=$paymentProcessor.name}Click the
+                            <strong>%1</strong>
+                            button to checkout to Google, where you will select your payment method and complete the registration.{/ts}
+                    {else}
+                        {ts 1=$paymentProcessor.name}Click the
+                            <strong>Continue</strong>
+                            button to checkout to %1, where you will select your payment method and complete the registration.{/ts}
+                    {/if }
+                {else}
+                    {ts}Otherwise, click the<strong>Continue</strong>button below to complete your registration.{/ts}
+                {/if}
+            </div>
+            {if $is_pay_later and !$isAmountzero}
+                <div class="bold">{$pay_later_receipt}</div>
+            {/if}
+        {/if}
 
         {* open div class .eventsreg-button *}
         <div class="eventsreg-button" id="eventsreg-button-top">
@@ -53,50 +87,6 @@
         </div>
         {* close div class .eventsreg-intro *}
 
-        {if $isOnWaitlist}
-            {*
-            <div class="help">
-                {ts}Please verify the information below.<span class="bold">Then click 'Continue' to be added to the WAIT LIST for this event</span>. If space becomes available you will receive an email with a link to a web page where you can complete your registration.{/ts}
-            </div>
-            *}
-        {elseif $isRequireApproval}
-            {*
-            <div class="help">
-                {ts}Please verify the information below. Then click 'Continue' to submit your registration.
-                    <span class="bold">Once approved, you will receive an email with a link to a web page where you can complete the registration process.</span>
-                {/ts}
-            </div>
-            *}
-        {else}
-            {*
-            <div id="help">
-                {ts}Please verify the information below. Click the
-                    <strong>Go Back</strong>
-                    button below if you need to make changes.{/ts}
-                {if $contributeMode EQ 'notify' and !$is_pay_later and ! $isAmountzero }
-                    {if $paymentProcessor.payment_processor_type EQ 'Google_Checkout'}
-                        {ts 1=$paymentProcessor.name}Click the
-                            <strong>%1</strong>
-                            button to checkout to Google, where you will select your payment method and complete the registration.{/ts}
-                    {else}
-                        {ts 1=$paymentProcessor.name}Click the
-                            <strong>Continue</strong>
-                            button to checkout to %1, where you will select your payment method and complete the registration.{/ts}
-                    {/if }
-                {else}
-                    {ts}Otherwise, click the<strong>Continue</strong>button below to complete your registration.{/ts}
-                {/if}
-            </div>
-            *}
-            {if $is_pay_later and !$isAmountzero}
-                {* open div class .eventsreg-preview *}
-                <div class="eventsreg-preview">
-                    {$pay_later_receipt}
-                </div>
-                {* close div class .eventsreg-preview *}
-            {/if}
-        {/if}
-
         {* open div class .eventsreg-block *}
         <div class="eventsreg-block" id="eventsreg-eventinfo">
             {* open div class .eventsreg-title *}
@@ -107,8 +97,6 @@
             </div>
             {* close div class .eventsreg-content *}
         </div>
-
-        {* close div class .eventsreg-block *}
 
         {if $pcpBlock}
             <div class="crm-group pcp_display-group">
@@ -201,7 +189,6 @@
 
         {include file="CRM/Event/Form/Registration/DisplayProfile.tpl"}
 
-        {*
         {if $contributeMode ne 'notify' and (!$is_pay_later or $isBillingAddressRequiredForPayLater) and $paidEvent and !$isAmountzero and !$isOnWaitlist and !$isRequireApproval}
             <div class="crm-group billing_name_address-group">
                 <div class="header-dark">
@@ -217,9 +204,7 @@
                 </div>
             </div>
         {/if}
-        *}
 
-        {*
         {if $contributeMode eq 'direct' and ! $is_pay_later and !$isAmountzero and !$isOnWaitlist and !$isRequireApproval}
             <div class="crm-group credit_card-group">
                 <div class="header-dark">
@@ -233,10 +218,8 @@
                 </div>
             </div>
         {/if}
-        *}
 
-        {*
-        {if $contributeMode NEQ 'notify'}
+        {if $contributeMode NEQ 'notify'} {* In 'notify mode, contributor is taken to processor payment forms next *}
             <div class="messages status section continue_message-section">
                 <p>
                     {ts}Your registration will not be submitted until you click the
@@ -245,27 +228,6 @@
                 </p>
             </div>
         {/if}
-        *}
-
-        {*
-        {if $paymentProcessor.payment_processor_type EQ 'Google_Checkout' and $paidEvent and !$is_pay_later and ! $isAmountzero and !$isOnWaitlist and !$isRequireApproval}
-            <fieldset>
-                <legend>{ts}Checkout with Google{/ts}</legend>
-                <div class="crm-section google_checkout-section">
-                    <table class="form-layout-compressed">
-                        <tr>
-                            <td class="description">{ts}Click the Google Checkout button to continue.{/ts}</td>
-                        </tr>
-                        <tr>
-                            <td>{$form._qf_Confirm_next_checkout.html} <span
-                                        style="font-size:11px; font-family: Arial, Verdana;">Checkout securely.  Pay without sharing your financial information. </span>
-                            </td>
-                        </tr>
-                    </table>
-                </div>
-            </fieldset>
-        {/if}
-        *}
 
         {if $event.confirm_footer_text}
             {* open div class .eventsreg-footer *}

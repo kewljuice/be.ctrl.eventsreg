@@ -1,8 +1,8 @@
 {*
  +--------------------------------------------------------------------+
- | CiviCRM version 4.6                                                |
+ | CiviCRM version 4.7                                                |
  +--------------------------------------------------------------------+
- | Copyright CiviCRM LLC (c) 2004-2015                                |
+ | Copyright CiviCRM LLC (c) 2004-2017                                |
  +--------------------------------------------------------------------+
  | This file is a part of CiviCRM.                                    |
  |                                                                    |
@@ -34,10 +34,8 @@
     {include file="CRM/common/TrackingFields.tpl"}
 
     <div class="crm-event-id-{$event.id} crm-block crm-event-thankyou-form-block">
-
         {* Don't use "normal" thank-you message for Waitlist and Approval Required registrations - since it will probably not make sense for those situations. dgg *}
-        {* {if $event.thankyou_text AND (not $isOnWaitlist AND not $isRequireApproval)} *}
-        {if $event.thankyou_text}
+        {if $event.thankyou_text AND (not $isOnWaitlist AND not $isRequireApproval)}
             {* open div class .eventsreg-intro *}
             <div class="eventsreg-intro">
                 {if $event.confirm_text}
@@ -66,53 +64,42 @@
             <br/>
             <br/>
         {/if}
-        {*
-           <div id="help">
-        *}
-        {if $isOnWaitlist}
-            {*
-            <p>
-                <span class="bold">{ts}You have been added to the WAIT LIST for this event.{/ts}</span>
-                {ts}If space becomes available you will receive an email with a link to a web page where you can complete your registration.{/ts}
-            </p>
-            *}
-        {elseif $isRequireApproval}
-            {*
-            <p>
-            <span class="bold">{ts}Your registration has been submitted.{/ts}
-                {ts}Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process.{/ts}</span>
-            </p>
-            *}
-        {elseif $is_pay_later and $paidEvent and !$isAmountzero}
-            {* open div class .eventsreg-preview *}
-            <div class="eventsreg-preview">
-                {$pay_later_receipt}
 
+        <div class="help">
+            {if $isOnWaitlist}
+                <p>
+                    <span class="bold">{ts}You have been added to the WAIT LIST for this event.{/ts}</span>
+                    {ts}If space becomes available you will receive an email with a link to a web page where you can complete your registration.{/ts}
+                </p>
+            {elseif $isRequireApproval}
+                <p>
+                <span class="bold">{ts}Your registration has been submitted.{/ts}
+                    {ts}Once your registration has been reviewed, you will receive an email with a link to a web page where you can complete the registration process.{/ts}</span>
+                </p>
+            {elseif $is_pay_later and $paidEvent and !$isAmountzero}
+                {* open div class .eventsreg-preview *}
+                <div class="eventsreg-preview">
+                    {$pay_later_receipt}
+
+                    {if $is_email_confirm}
+                        <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
+                    {/if}
+                </div>
+                {* close div class .eventsreg-preview *}
+
+                {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
+            {elseif $contributeMode EQ 'notify' and $paidEvent}
+                <p>{ts 1=$paymentProcessor.name}Your registration payment has been submitted to %1 for processing. Please print this page for your records.{/ts}</p>
                 {if $is_email_confirm}
-                    <p>{ts 1=$email}An email with event details has been sent to %1.{/ts}</p>
+                    <p>{ts 1=$email}A registration confirmation email will be sent to %1 once the transaction is processed successfully.{/ts}</p>
                 {/if}
-            </div>
-            {* close div class .eventsreg-preview *}
-
-            {* PayPal_Standard sets contribution_mode to 'notify'. We don't know if transaction is successful until we receive the IPN (payment notification) *}
-        {elseif $contributeMode EQ 'notify' and $paidEvent}
-            {*
-            <p>{ts 1=$paymentProcessor.name}Your registration payment has been submitted to %1 for processing. Please print this page for your records.{/ts}</p>
-            {if $is_email_confirm}
-                <p>{ts 1=$email}A registration confirmation email will be sent to %1 once the transaction is processed successfully.{/ts}</p>
+            {else}
+                <p>{ts}Your registration has been processed successfully. Please print this page for your records.{/ts}</p>
+                {if $is_email_confirm}
+                    <p>{ts 1=$email}A registration confirmation email has also been sent to %1{/ts}</p>
+                {/if}
             {/if}
-            *}
-        {else}
-            {*
-            <p>{ts}Your registration has been processed successfully. Please print this page for your records.{/ts}</p>
-            {if $is_email_confirm}
-                <p>{ts 1=$email}A registration confirmation email has also been sent to %1{/ts}</p>
-            {/if}
-            *}
-        {/if}
-        {*
         </div>
-        *}
         <div class="spacer"></div>
 
         {* open div class .eventsreg-block *}
@@ -121,7 +108,7 @@
             <div class="eventsreg-title"><h2>{ts}Event Information{/ts}</h2></div>
             {* open div class .eventsreg-content *}
             <div class="eventsreg-content">
-                {include file="CRM/Event/Form/Registration/EventInfoBlock.tpl"}
+                {include file="CRM/Event/Form/Registration/EventInfoBlock.tpl" context="ThankYou"}
             </div>
             {* close div class .eventsreg-content *}
         </div>
@@ -134,46 +121,55 @@
                 <div class="eventsreg-title"><h2>{$event.fee_label}</h2></div>
                 {* open div class .eventsreg-content *}
                 <div class="eventsreg-content">
-                    {if $lineItem}
-                        {include file="CRM/Price/Page/LineItem.tpl" context="Event"}
-                    {elseif $amount || $amount == 0}
-                        <div class="crm-section no-label amount-item-section">
-                            {foreach from= $finalAmount item=amount key=level}
-                                <div class="content">
-                                    {$amount.amount|crmMoney}&nbsp;&nbsp;{$amount.label}
-                                </div>
-                                <div class="clear"></div>
-                            {/foreach}
+
+                    <div class="crm-group event_fees-group">
+                        <div class="header-dark">
+                            {$event.fee_label}
                         </div>
-                        {if $totalTaxAmount}
-                            <div class="content bold">{ts}Tax Total{/ts}:&nbsp;&nbsp;{$totalTaxAmount|crmMoney}</div>
-                            <div class="clear"></div>
-                        {/if}
-                        {if $totalAmount}
-                            <div class="crm-section no-label total-amount-section">
-                                <div class="content bold">{ts}Event Total{/ts}:&nbsp;&nbsp;{$totalAmount|crmMoney}</div>
-                                <div class="clear"></div>
+                        {if $lineItem}
+                            {include file="CRM/Price/Page/LineItem.tpl" context="Event"}
+                        {elseif $amount || $amount == 0}
+                            <div class="crm-section no-label amount-item-section">
+                                {foreach from= $finalAmount item=amount key=level}
+                                    <div class="content">
+                                        {$amount.amount|crmMoney}&nbsp;&nbsp;{$amount.label}
+                                    </div>
+                                    <div class="clear"></div>
+                                {/foreach}
                             </div>
-                            {if $hookDiscount.message}
-                                <div class="crm-section hookDiscount-section">
-                                    <em>({$hookDiscount.message})</em>
+                            {if $totalTaxAmount}
+                                <div class="content bold">{ts}Tax Total{/ts}
+                                    :&nbsp;&nbsp;{$totalTaxAmount|crmMoney}</div>
+                                <div class="clear"></div>
+                            {/if}
+                            {if $totalAmount}
+                                <div class="crm-section no-label total-amount-section">
+                                    <div class="content bold">{ts}Event Total{/ts}
+                                        :&nbsp;&nbsp;{$totalAmount|crmMoney}</div>
+                                    <div class="clear"></div>
                                 </div>
+                                {if $hookDiscount.message}
+                                    <div class="crm-section hookDiscount-section">
+                                        <em>({$hookDiscount.message})</em>
+                                    </div>
+                                {/if}
                             {/if}
                         {/if}
-                    {/if}
 
-                    {if $receive_date}
-                        <div class="crm-section no-label receive_date-section">
-                            <div class="content bold">{ts}Transaction Date{/ts}: {$receive_date|crmDate}</div>
-                            <div class="clear"></div>
-                        </div>
-                    {/if}
-                    {if $contributeMode ne 'notify' AND $trxn_id}
-                        <div class="crm-section no-label trxn_id-section">
-                            <div class="content bold">{ts}Transaction #{/ts}: {$trxn_id}</div>
-                            <div class="clear"></div>
-                        </div>
-                    {/if}
+                        {if $receive_date}
+                            <div class="crm-section no-label receive_date-section">
+                                <div class="content bold">{ts}Transaction Date{/ts}: {$receive_date|crmDate}</div>
+                                <div class="clear"></div>
+                            </div>
+                        {/if}
+                        {if $contributeMode ne 'notify' AND $trxn_id}
+                            <div class="crm-section no-label trxn_id-section">
+                                <div class="content bold">{ts}Transaction #{/ts}: {$trxn_id}</div>
+                                <div class="clear"></div>
+                            </div>
+                        {/if}
+                    </div>
+
                 </div>
                 {* close div class .eventsreg-content *}
             </div>
@@ -199,7 +195,6 @@
             </div>
             {* close div class .eventsreg-block *}
         {/if}
-
 
         {if $event.participant_role neq 'Attendee' and $defaultRole}
             {* open div class .eventsreg-block *}
