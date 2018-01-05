@@ -2,7 +2,6 @@
 
 Adds custom css and javascript to events registration forms
 - [Installation](#installation)
-- [Configuration](#configuration)
 
 ***
 
