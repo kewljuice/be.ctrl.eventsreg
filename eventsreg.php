@@ -142,16 +142,10 @@ function eventsreg_civicrm_buildForm($formName, &$form) {
    */
   if (strpos($formName, 'CRM_Event_Form_Registration_') !== FALSE) {
     CRM_Core_Resources::singleton()
-      // include JS file
-      ->addScriptFile('be.ctrl.eventsreg', 'js/ctrl-eventsreg.js')
+      // include JS file (uncomment below if needed)
+      // ->addScriptFile('be.ctrl.eventsreg', 'js/ctrl-eventsreg.js')
       // include CSS file
-      ->addStyleFile('be.ctrl.eventsreg', 'css/ctrl-eventsreg.css')
-      ->addStyleFile('be.ctrl.eventsreg', 'css/font-awesome.min.css');
+      ->addStyleFile('be.ctrl.eventsreg', 'css/ctrl-eventsreg.css');
   }
-  /*
-   * Define Drupal node linked to event-id
-   */
-
-  // TODO
 
 }
