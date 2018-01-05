@@ -89,10 +89,22 @@
             </div>
         {/if}
 
-        <div class="crm-public-form-item crm-section cms_user-section">
-            {* User account registration option. Displays if enabled for one of the profiles on this page. *}
-            {include file="CRM/common/CMSUser.tpl"}
-        </div>
+        {* User account registration option. Displays if enabled for one of the profiles on this page. *}
+        {if $showCMS }
+            {* open div class .eventsreg-block *}
+            <div class="eventsreg-block" id="eventsreg-user">
+                {* open div class .eventsreg-title *}
+                <div class="eventsreg-title"><h2>{ts domain='be.ctrl.eventsreg'}Your website login{/ts}</h2>
+                </div>
+                {* open div class .eventsreg-content *}
+                <div class="crm-public-form-item crm-section cms_user-section">
+                    {* User account registration option. Displays if enabled for one of the profiles on this page. *}
+                    {include file="CRM/common/CMSUser.tpl"}
+                </div>
+                {* close div class .eventsreg-content *}
+            </div>
+            {* close div class .eventsreg-block *}
+        {/if}
 
         {* open div class .eventsreg-block *}
         <div class="eventsreg-block" id="eventsreg-pre">
