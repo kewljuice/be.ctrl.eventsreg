@@ -200,24 +200,28 @@
         {/if}
 
         {if $form.payment_processor_id.label}
-            {* open div class .eventsreg-block *}
-            <div class="eventsreg-block" id="eventsreg-payment">
-                {* open div class .eventsreg-title *}
-                <div class="eventsreg-title"><h2>{ts domain='be.ctrl.eventsreg'}Payment method{/ts}</h2></div>
-                {* open div class .eventsreg-content *}
-                <div class="eventsreg-content">
-                    <fieldset class="crm-public-form-item crm-group payment_options-group" style="display:none;">
+            <!-- <fieldset class="crm-public-form-item crm-group payment_options-group" style="display:none;"> -->
+            <div class="crm-public-form-item crm-group payment_options-group" style="display:none;">
+                {* open div class .eventsreg-block *}
+                <div class="eventsreg-block" id="eventsreg-payment">
+                    {* open div class .eventsreg-title *}
+                    <div class="eventsreg-title"><h2>{ts domain='be.ctrl.eventsreg'}Payment method{/ts}</h2></div>
+                    {* open div class .eventsreg-content *}
+                    <div class="eventsreg-content">
+
                         <legend>{ts}Payment Options{/ts}</legend>
                         <div class="crm-section payment_processor-section">
                             <div class="label">{$form.payment_processor_id.label}</div>
                             <div class="content">{$form.payment_processor_id.html}</div>
                             <div class="clear"></div>
                         </div>
-                    </fieldset>
+
+                    </div>
+                    {* close div class .eventsreg-content *}
                 </div>
-                {* close div class .eventsreg-content *}
+                {* close div class .eventsreg-block *}
             </div>
-            {* close div class .eventsreg-block *}
+            <!-- </fieldset> -->
         {/if}
 
         {if $priceSet}
