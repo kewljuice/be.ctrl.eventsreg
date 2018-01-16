@@ -64,9 +64,11 @@
                     {ts}Otherwise, click the<strong>Continue</strong>button below to complete your registration.{/ts}
                 {/if}
             </div>
+            {*
             {if $is_pay_later and !$isAmountzero}
                 <div class="bold">{$pay_later_receipt}</div>
             {/if}
+            *}
         {/if}
 
         {* open div class .eventsreg-button *}
