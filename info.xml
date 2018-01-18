@@ -2,7 +2,7 @@
 <extension key="be.ctrl.eventsreg" type="module">
   <file>eventsreg</file>
   <name>CiviCRM events registration extension</name>
-  <description>Adds custom css and javascript to events registration forms</description>
+  <description>Adds custom css + javascript to CiviCRM 4.7 for event page and event registration</description>
   <license>AGPL-3.0</license>
   <maintainer>
     <author>Hechtermans Wouter</author>
@@ -14,9 +14,9 @@
     <url desc="Support">http://www.ctrl.be/</url>
     <url desc="Licensing">http://www.gnu.org/licenses/agpl-3.0.html</url>
   </urls>
-  <releaseDate>2016-02-09</releaseDate>
+  <releaseDate>2017-01-18</releaseDate>
   <version>1.0</version>
-  <develStage>alpha</develStage>
+  <develStage>stable</develStage>
   <compatibility>
     <ver>4.7</ver>
   </compatibility>
