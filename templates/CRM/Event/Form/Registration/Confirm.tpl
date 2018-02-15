@@ -89,6 +89,16 @@
         </div>
         {* close div class .eventsreg-intro *}
 
+        {if $contributeMode NEQ 'notify'} {* In 'notify mode, contributor is taken to processor payment forms next *}
+            <div class="messages status section continue_message-section">
+                <p>
+                    {ts}Your registration will not be submitted until you click the
+                        <strong>Continue</strong>
+                        button. Please click the button one time only. If you need to change any details, click the Go Back button below to return to the previous screen.{/ts}
+                </p>
+            </div>
+        {/if}
+
         {* open div class .eventsreg-block *}
         <div class="eventsreg-block" id="eventsreg-eventinfo">
             {* open div class .eventsreg-title *}
@@ -218,16 +228,6 @@
                     <div class="content">{ts}Expires{/ts}: {$credit_card_exp_date|truncate:7:''|crmDate}</div>
                     <div class="clear"></div>
                 </div>
-            </div>
-        {/if}
-
-        {if $contributeMode NEQ 'notify'} {* In 'notify mode, contributor is taken to processor payment forms next *}
-            <div class="messages status section continue_message-section">
-                <p>
-                    {ts}Your registration will not be submitted until you click the
-                        <strong>Continue</strong>
-                        button. Please click the button one time only. If you need to change any details, click the Go Back button below to return to the previous screen.{/ts}
-                </p>
             </div>
         {/if}
 
