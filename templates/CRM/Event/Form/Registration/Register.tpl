@@ -58,34 +58,21 @@
         {/if}
 
         {* open div class .eventsreg-intro *}
-        <div class="eventsreg-intro">
-            {if $event.intro_text}
-                <div id="intro_text" class="crm-public-form-item crm-section intro_text-section">
-                    <p>{$event.intro_text}</p>
-                </div>
-            {/if}
-        </div>
-        {* close div class .eventsreg-intro *}
+        {if $event.intro_text}
+            <div class="eventsreg-intro">
+                {if $event.intro_text}
+                    <div id="intro_text" class="crm-public-form-item crm-section intro_text-section">
+                        <p>{$event.intro_text}</p>
+                    </div>
+                {/if}
+            </div>
+            {* close div class .eventsreg-intro *}
+        {/if}
 
         {include file="CRM/common/cidzero.tpl"}
         {if $pcpSupporterText}
             <div class="crm-public-form-item crm-section pcpSupporterText-section">
                 <div class="content">{$pcpSupporterText}</div>
-            </div>
-        {/if}
-
-        {if $form.additional_participants.html}
-            <div class="crm-public-form-item crm-section additional_participants-section" id="noOfparticipants">
-                <div class="label">{$form.additional_participants.label} <span class="crm-marker"
-                                                                               title="{ts}This field is required.{/ts}">*</span>
-                </div>
-                <div class="content">
-                    {$form.additional_participants.html}{if $contact_id || $contact_id == NULL} &nbsp; ({ts}including yourself{/ts}){/if}
-                    <br/>
-                    <span
-                            class="description">{ts}Fill in your registration information on this page. If you are registering additional people, you will be able to enter their registration information after you complete this page and click &quot;Continue&quot;.{/ts}</span>
-                </div>
-                <div class="clear"></div>
             </div>
         {/if}
 
@@ -115,12 +102,38 @@
             <div class="eventsreg-content">
                 <div class="crm-public-form-item crm-section custom_pre-section">
                     {* Display "Top of page" profile immediately after the introductory text *}
-                    {include file="CRM/UF/Form/Block.tpl" fields=$customPre}
+                    {include file="CRM/UF/Form/CustomEventBlock.tpl" fields=$customPre}
                 </div>
             </div>
             {* close div class .eventsreg-content *}
         </div>
         {* close div class .eventsreg-block *}
+
+        {if $form.additional_participants.html}
+            {* open div class .eventsreg-block *}
+            <div class="eventsreg-block" id="eventsreg-multiple">
+                {* open div class .eventsreg-title *}
+                <div class="eventsreg-title"><h2>{ts domain='be.ctrl.eventsreg'}Multiple participants{/ts}</h2>
+                </div>
+                {* open div class .eventsreg-content *}
+                <div class="eventsreg-content">
+                    <div class="crm-public-form-item crm-section additional_participants-section" id="noOfparticipants">
+                        <div class="label">{$form.additional_participants.label}
+                            <span class="crm-marker" title="{ts}This field is required.{/ts}">*</span>
+                        </div>
+                        <div class="content">
+                            <div>
+                                {$form.additional_participants.html}{if $contact_id || $contact_id == NULL} &nbsp; ({ts}including yourself{/ts}){/if}
+                            </div>
+                            <span class="description">{ts}Fill in your registration information on this page. If you are registering additional people, you will be able to enter their registration information after you complete this page and click &quot;Continue&quot;.{/ts}</span>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+                {* close div class .eventsreg-content *}
+            </div>
+            {* close div class .eventsreg-block *}
+        {/if}
 
         {if $customPost}
             {* open div class .eventsreg-block *}
@@ -130,7 +143,7 @@
                 {* open div class .eventsreg-content *}
                 <div class="eventsreg-content">
                     <div class="crm-public-form-item crm-section custom_pre-section">
-                        {include file="CRM/UF/Form/Block.tpl" fields=$customPost}
+                        {include file="CRM/UF/Form/CustomEventBlock.tpl" fields=$customPost}
                     </div>
                 </div>
                 {* close div class .eventsreg-content *}
@@ -146,7 +159,7 @@
 
                 {if ! $quickConfig}
                 <fieldset id="priceset" class="crm-public-form-item crm-group priceset-group">
-                    <legend>{$event.fee_label}</legend>
+                    <!-- <legend>{$event.fee_label}</legend> -->
                     {/if}
 
                     {* open div class .eventsreg-content *}
@@ -209,7 +222,7 @@
                     {* open div class .eventsreg-content *}
                     <div class="eventsreg-content">
 
-                        <legend>{ts}Payment Options{/ts}</legend>
+                        <!-- <legend>{ts}Payment Options{/ts}</legend> -->
                         <div class="crm-section payment_processor-section">
                             <div class="label">{$form.payment_processor_id.label}</div>
                             <div class="content">{$form.payment_processor_id.html}</div>
@@ -255,7 +268,7 @@
         {literal}
 
         cj("#additional_participants").change(function () {
-            skipPaymentMethod();
+          skipPaymentMethod();
         });
 
         {/literal}
@@ -266,13 +279,13 @@
 
         function allowParticipant() {
             {/literal}{if $allowGroupOnWaitlist}{literal}
-            var additionalParticipants = cj('#additional_participants').val();
-            var pricesetParticipantCount = 0;
+          var additionalParticipants = cj('#additional_participants').val();
+          var pricesetParticipantCount = 0;
             {/literal}{if $priceSet}{literal}
-            pricesetParticipantCount = pPartiCount;
+          pricesetParticipantCount = pPartiCount;
             {/literal}{/if}{literal}
 
-            allowGroupOnWaitlist(additionalParticipants, pricesetParticipantCount);
+          allowGroupOnWaitlist(additionalParticipants, pricesetParticipantCount);
             {/literal}{/if}{literal}
         }
 
@@ -282,68 +295,68 @@
 
         function allowGroupOnWaitlist(additionalParticipants, pricesetParticipantCount) {
             {/literal}{if $isAdditionalParticipants}{literal}
-            if (!additionalParticipants) {
-                additionalParticipants = cj('#additional_participants').val();
-            }
+          if (!additionalParticipants) {
+            additionalParticipants = cj('#additional_participants').val();
+          }
             {/literal}{else}{literal}
-            additionalParticipants = 0;
+          additionalParticipants = 0;
             {/literal}{/if}{literal}
 
-            additionalParticipants = parseInt(additionalParticipants);
-            if (!additionalParticipants) {
-                additionalParticipants = 0;
-            }
+          additionalParticipants = parseInt(additionalParticipants);
+          if (!additionalParticipants) {
+            additionalParticipants = 0;
+          }
 
-            var availableRegistrations = {/literal}'{$availableRegistrations}'{literal};
-            var totalParticipants = parseInt(additionalParticipants) + 1;
+          var availableRegistrations = {/literal}'{$availableRegistrations}'{literal};
+          var totalParticipants = parseInt(additionalParticipants) + 1;
 
-            if (pricesetParticipantCount) {
-                // add priceset count if any
-                totalParticipants += parseInt(pricesetParticipantCount) - 1;
-            }
-            var isrequireApproval = {/literal}'{$requireApprovalMsg}'{literal};
+          if (pricesetParticipantCount) {
+            // add priceset count if any
+            totalParticipants += parseInt(pricesetParticipantCount) - 1;
+          }
+          var isrequireApproval = {/literal}'{$requireApprovalMsg}'{literal};
 
-            if (totalParticipants > availableRegistrations) {
-                cj("#id-waitlist-msg").show();
-                cj("#id-waitlist-approval-msg").show();
+          if (totalParticipants > availableRegistrations) {
+            cj("#id-waitlist-msg").show();
+            cj("#id-waitlist-approval-msg").show();
 
-                //set the value for hidden bypass payment.
-                cj("#bypass_payment").val(1);
+            //set the value for hidden bypass payment.
+            cj("#bypass_payment").val(1);
+          }
+          else {
+            if (isrequireApproval) {
+              cj("#id-waitlist-approval-msg").show();
+              cj("#id-waitlist-msg").hide();
+              cj("#bypass_payment").val(1);
             }
             else {
-                if (isrequireApproval) {
-                    cj("#id-waitlist-approval-msg").show();
-                    cj("#id-waitlist-msg").hide();
-                    cj("#bypass_payment").val(1);
-                }
-                else {
-                    cj("#id-waitlist-approval-msg").hide();
-                    cj("#bypass_payment").val(0);
-                }
-                //reset value since user don't want or not eligible for waitlist
-                skipPaymentMethod();
+              cj("#id-waitlist-approval-msg").hide();
+              cj("#bypass_payment").val(0);
             }
+            //reset value since user don't want or not eligible for waitlist
+            skipPaymentMethod();
+          }
         }
 
         {/literal}
         {if $pcp && $is_honor_roll }{literal}
         function pcpAnonymous() {
-            // clear nickname field if anonymous is true
-            if (document.getElementsByName("pcp_is_anonymous")[1].checked) {
-                document.getElementById('pcp_roll_nickname').value = '';
-            }
-            if (!document.getElementsByName("pcp_display_in_roll")[0].checked) {
-                cj('#nickID, #nameID, #personalNoteID').hide();
+          // clear nickname field if anonymous is true
+          if (document.getElementsByName("pcp_is_anonymous")[1].checked) {
+            document.getElementById('pcp_roll_nickname').value = '';
+          }
+          if (!document.getElementsByName("pcp_display_in_roll")[0].checked) {
+            cj('#nickID, #nameID, #personalNoteID').hide();
+          }
+          else {
+            if (document.getElementsByName("pcp_is_anonymous")[0].checked) {
+              cj('#nameID, #nickID, #personalNoteID').show();
             }
             else {
-                if (document.getElementsByName("pcp_is_anonymous")[0].checked) {
-                    cj('#nameID, #nickID, #personalNoteID').show();
-                }
-                else {
-                    cj('#nameID').show();
-                    cj('#nickID, #personalNoteID').hide();
-                }
+              cj('#nameID').show();
+              cj('#nickID, #personalNoteID').hide();
             }
+          }
         }
         {/literal}
         {/if}

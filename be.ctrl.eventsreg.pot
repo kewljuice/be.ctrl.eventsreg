@@ -2,16 +2,25 @@
 msgid ""
 msgstr ""
 
+msgid "Participant information"
+msgstr ""
+
+msgid "Participant additional data"
+msgstr ""
+
+msgid "Price"
+msgstr ""
+
 msgid "Your website login"
 msgstr ""
 
 msgid "Your personal information"
 msgstr ""
 
-msgid "Your additional data"
+msgid "Multiple participants"
 msgstr ""
 
-msgid "Price"
+msgid "Your additional data"
 msgstr ""
 
 msgid "Payment method"
