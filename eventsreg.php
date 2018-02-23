@@ -150,11 +150,11 @@ function eventsreg_civicrm_buildForm($formName, &$form) {
 }
 
 /**
- * CiviCRM hook navigationMenu
+ * Implements hook_civicrm_navigationMenu().
+ *
+ * @param array $params
  */
 function eventsreg_civicrm_navigationMenu(&$params) {
-  //  Get the maximum key of $params.
-  $nextKey = CRM_Civirules_Utils::getMenuKeyMax($params);
   // Check for Administer navID.
   $AdministerKey = '';
   foreach ($params as $k => $v) {
@@ -164,7 +164,7 @@ function eventsreg_civicrm_navigationMenu(&$params) {
   }
   // Check for Parent navID.
   foreach ($params[$AdministerKey]['child'] as $k => $v) {
-    if ($v['attributes']['name'] == 'CTRL') {
+    if ($k == 'CTRL') {
       $parentKey = $v['attributes']['navID'];
     }
   }
@@ -180,15 +180,13 @@ function eventsreg_civicrm_navigationMenu(&$params) {
         'operator' => NULL,
         'separator' => 0,
         'parentID' => $AdministerKey,
-        'navID' => $nextKey,
+        'navID' => 'CTRL',
         'active' => 1,
       ],
       'child' => NULL,
     ];
     // Add parent to Administer
-    $params[$AdministerKey]['child'][$nextKey] = $parent;
-    $parentKey = $nextKey;
-    $nextKey++;
+    $params[$AdministerKey]['child']['CTRL'] = $parent;
   }
   // Create child(s) array
   $child = [
@@ -200,11 +198,11 @@ function eventsreg_civicrm_navigationMenu(&$params) {
       'operator' => NULL,
       'separator' => 0,
       'parentID' => $parentKey,
-      'navID' => $nextKey++,
+      'navID' => 'eventsreg',
       'active' => 1,
     ],
     'child' => NULL,
   ];
   // Add child(s) for this extension
-  $params[$AdministerKey]['child'][$parentKey]['child'][$nextKey] = $child;
+  $params[$AdministerKey]['child']['CTRL']['child']['eventsreg'] = $child;
 }
