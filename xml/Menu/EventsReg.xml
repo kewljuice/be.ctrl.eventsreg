@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<menu>
+    <item>
+        <path>civicrm/ctrl/eventsreg</path>
+        <page_callback>CRM_EventsReg_Page_EventsReg</page_callback>
+        <title>eventsreg</title>
+        <access_arguments>access CiviCRM</access_arguments>
+    </item>
+</menu>

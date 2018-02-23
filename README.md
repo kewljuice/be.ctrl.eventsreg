@@ -2,6 +2,7 @@
 
 Adds custom css and javascript to events registration forms
 - [Installation](#installation)
+- [Configuration](#configuration)
 
 ***
 
@@ -21,3 +22,9 @@ Adds custom css and javascript to events registration forms
 
 - The next step is enabling the extension which can be done from<br> 
 ```"Administer -> System Settings -> Manage CiviCRM Extensions".```
+
+## Configuration
+
+- Module configuration is available at ```"Administer -> CTRL -> EventsReg"``` or **yoursite.org/civicrm/ctrl/eventsreg**. 
+
+- Activate Stylesheet or Javascript here.

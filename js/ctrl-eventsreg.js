@@ -19,6 +19,6 @@ cj(function ($, ts) {
      */
 
     // Print log if javascript file is loaded.
-    // console.log("ctrl-eventsreg.js loaded");
+    console.log("ctrl-eventsreg.js loaded");
 
 }(CRM.$, CRM.ts('be.ctrl.eventsreg')));

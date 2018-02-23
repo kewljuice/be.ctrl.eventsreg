@@ -46,6 +46,9 @@ function eventsreg_civicrm_uninstall() {
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_enable
  */
 function eventsreg_civicrm_enable() {
+  // Assign default parameters.
+  CRM_Core_BAO_Setting::setItem(0, 'eventsreg', 'eventsreg-css');
+  CRM_Core_BAO_Setting::setItem(0, 'eventsreg', 'eventsreg-js');
   _eventsreg_civix_civicrm_enable();
 }
 
@@ -61,12 +64,14 @@ function eventsreg_civicrm_disable() {
 /**
  * Implements hook_civicrm_upgrade().
  *
- * @param $op string, the type of operation being performed; 'check' or 'enqueue'
- * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of pending up upgrade tasks
+ * @param $op string, the type of operation being performed; 'check' or
+ *   'enqueue'
+ * @param $queue CRM_Queue_Queue, (for 'enqueue') the modifiable list of
+ *   pending up upgrade tasks
  *
  * @return mixed
- *   Based on op. for 'check', returns array(boolean) (TRUE if upgrades are pending)
- *                for 'enqueue', returns void
+ *   Based on op. for 'check', returns array(boolean) (TRUE if upgrades are
+ *   pending) for 'enqueue', returns void
  *
  * @link http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_upgrade
  */
@@ -124,16 +129,6 @@ function eventsreg_civicrm_alterSettingsFolders(&$metaDataFolders = NULL) {
 
 /**
  * CiviCRM hook buildForm
- *
- * http://wiki.civicrm.org/confluence/display/CRMDOC/Hook+Reference
- * http://wiki.civicrm.org/confluence/display/CRMDOC/hook_civicrm_post
- * http://wiki.civicrm.org/confluence/display/CRMDOC/Form+hooks
- * http://civicrm.stackexchange.com/questions/213/can-i-find-the-target-contact-id-in-hook-civicrm-buildform
- * http://www.smarty.net/forums/viewtopic.php?t=11435
- * http://www.jackrabbithanna.com/articles/easy-jquery-modificaiton-civicrm-forms
- * https://www.prestashop.com/forums/topic/218203-solved-how-to-view-module-smarty-variables
- * https://forum.civicrm.org/index.php?topic=31686.0
- *
  */
 function eventsreg_civicrm_buildForm($formName, &$form) {
   /*
@@ -141,11 +136,75 @@ function eventsreg_civicrm_buildForm($formName, &$form) {
    * https://forum.civicrm.org/index.php?topic=27216.0
    */
   if (strpos($formName, 'CRM_Event_Form_Registration_') !== FALSE) {
-    CRM_Core_Resources::singleton()
-      // include JS file (uncomment below if needed)
-      // ->addScriptFile('be.ctrl.eventsreg', 'js/ctrl-eventsreg.js')
-      // include CSS file
-      ->addStyleFile('be.ctrl.eventsreg', 'css/ctrl-eventsreg.css');
+    // include CSS file.
+    if (CRM_Core_BAO_Setting::getItem('eventsreg', 'eventsreg-css')) {
+      CRM_Core_Resources::singleton()
+        ->addStyleFile('be.ctrl.eventsreg', 'css/ctrl-eventsreg.css');
+    }
+    // include JS file.
+    if (CRM_Core_BAO_Setting::getItem('eventsreg', 'eventsreg-js')) {
+      CRM_Core_Resources::singleton()
+        ->addScriptFile('be.ctrl.eventsreg', 'js/ctrl-eventsreg.js');
+    }
   }
+}
 
+/**
+ * CiviCRM hook navigationMenu
+ */
+function eventsreg_civicrm_navigationMenu(&$params) {
+  //  Get the maximum key of $params.
+  $nextKey = CRM_Civirules_Utils::getMenuKeyMax($params);
+  // Check for Administer navID.
+  $AdministerKey = '';
+  foreach ($params as $k => $v) {
+    if ($v['attributes']['name'] == 'Administer') {
+      $AdministerKey = $k;
+    }
+  }
+  // Check for Parent navID.
+  foreach ($params[$AdministerKey]['child'] as $k => $v) {
+    if ($v['attributes']['name'] == 'CTRL') {
+      $parentKey = $v['attributes']['navID'];
+    }
+  }
+  // If Parent navID doesn't exist create.
+  if (!isset($parentKey)) {
+    // Create parent array
+    $parent = [
+      'attributes' => [
+        'label' => 'CTRL',
+        'name' => 'CTRL',
+        'url' => NULL,
+        'permission' => 'access CiviCRM',
+        'operator' => NULL,
+        'separator' => 0,
+        'parentID' => $AdministerKey,
+        'navID' => $nextKey,
+        'active' => 1,
+      ],
+      'child' => NULL,
+    ];
+    // Add parent to Administer
+    $params[$AdministerKey]['child'][$nextKey] = $parent;
+    $parentKey = $nextKey;
+    $nextKey++;
+  }
+  // Create child(s) array
+  $child = [
+    'attributes' => [
+      'label' => 'EventsReg',
+      'name' => 'ctrl_eventsreg',
+      'url' => 'civicrm/ctrl/eventsreg',
+      'permission' => 'access CiviCRM',
+      'operator' => NULL,
+      'separator' => 0,
+      'parentID' => $parentKey,
+      'navID' => $nextKey++,
+      'active' => 1,
+    ],
+    'child' => NULL,
+  ];
+  // Add child(s) for this extension
+  $params[$AdministerKey]['child'][$parentKey]['child'][$nextKey] = $child;
 }
