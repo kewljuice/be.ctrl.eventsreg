@@ -2,7 +2,7 @@
 
 require_once 'CRM/Core/Page.php';
 
-class CRM_eventsreg_Page_eventsreg extends CRM_Core_Page {
+class CRM_EventsReg_Page_EventsReg extends CRM_Core_Page {
 
   function run() {
     // Page title.
