@@ -31,7 +31,7 @@ class CRM_EventsReg_Page_EventsReg extends CRM_Core_Page {
     // JS.
     $form .= "<label><input type='checkbox' id='js' name='js' value='1' " . ($js ? " checked='checked' " : "") . ">Include extension javascript</label><br>";
     $form .= "<div class='crm-submit-buttons'>";
-    $form .= "<span class='crm-button'><input class='crm-form-submit default' type='submit' value='Submit'></span>";
+    $form .= "<input class='crm-form-submit default' type='submit' value='Submit'>";
     $form .= "</div>";
     $form .= "</form>";
     // Assign form.
