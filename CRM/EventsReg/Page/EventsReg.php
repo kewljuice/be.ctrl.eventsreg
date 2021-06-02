@@ -14,16 +14,15 @@ class CRM_EventsReg_Page_EventsReg extends CRM_Core_Page {
     if (isset($_REQUEST['action']) && $_REQUEST['action'] == 'update') {
       // CSS.
       $css = (isset($_REQUEST['css']) ? 1 : 0);
-      CRM_Core_BAO_Setting::setItem($css, 'eventsreg', 'eventsreg-css');
+      Civi::settings()->set('eventsreg-css', $css);
       // JS.
       $js = (isset($_REQUEST['js']) ? 1 : 0);
-      CRM_Core_BAO_Setting::setItem($js, 'eventsreg', 'eventsreg-js');
-
+      Civi::settings()->set('eventsreg-js', $js);
       CRM_Core_Session::setStatus(ts('Settings changed'), ts('Saved'), 'success');
     }
     // Variables.
-    $css = CRM_Core_BAO_Setting::getItem('eventsreg', 'eventsreg-css');
-    $js = CRM_Core_BAO_Setting::getItem('eventsreg', 'eventsreg-js');
+    $css = Civi::settings()->get('eventsreg-css');
+    $js = Civi::settings()->get('eventsreg-js');
     // Build form.
     $form = "<form action=" . $url . " method='post'>";
     $form .= "<input type='hidden' name='action' value='update'>";

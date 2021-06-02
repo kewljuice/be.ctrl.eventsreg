@@ -47,8 +47,8 @@ function eventsreg_civicrm_uninstall() {
  */
 function eventsreg_civicrm_enable() {
   // Assign default parameters.
-  CRM_Core_BAO_Setting::setItem(0, 'eventsreg', 'eventsreg-css');
-  CRM_Core_BAO_Setting::setItem(0, 'eventsreg', 'eventsreg-js');
+  Civi::settings()->set('eventsreg-css', 0);
+  Civi::settings()->set('eventsreg-js', 0);
   _eventsreg_civix_civicrm_enable();
 }
 
@@ -137,12 +137,12 @@ function eventsreg_civicrm_buildForm($formName, &$form) {
    */
   if (strpos($formName, 'CRM_Event_Form_Registration_') !== FALSE) {
     // include CSS file.
-    if (CRM_Core_BAO_Setting::getItem('eventsreg', 'eventsreg-css')) {
+    if (Civi::settings()->get('eventsreg-css')) {
       CRM_Core_Resources::singleton()
         ->addStyleFile('be.ctrl.eventsreg', 'css/ctrl-eventsreg.css');
     }
     // include JS file.
-    if (CRM_Core_BAO_Setting::getItem('eventsreg', 'eventsreg-js')) {
+    if (Civi::settings()->get('eventsreg-js')) {
       CRM_Core_Resources::singleton()
         ->addScriptFile('be.ctrl.eventsreg', 'js/ctrl-eventsreg.js');
     }
